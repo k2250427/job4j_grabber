@@ -1,4 +1,4 @@
-# job4j_design
+# job4j_grabber
 
 [![Build Status](https://travis-ci.com/k2250427/job4j_grabber.svg?branch=master)](https://travis-ci.com/k2250427/job4j_grabber)
 
