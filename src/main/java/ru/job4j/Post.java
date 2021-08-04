@@ -23,12 +23,26 @@ public class Post {
         description = doc.select(".msgBody").get(1).text();
         SqlRuDateTimeParser dataParser = new SqlRuDateTimeParser();
         Elements footer = doc.select(".msgFooter");
-        created = dataParser.parse(footer.get(0).text().substring(1,16));
+        String dateStr = footer.get(0).text();
+        int pos = dateStr.indexOf('[');
+        created = dataParser.parse(dateStr.substring(0, pos - 1));
     }
 
     public static void main(String[] args) throws Exception {
         Post post = new Post();
         post.loadFromLink("https://www.sql.ru/forum/1325330/"
                 + "lidy-be-fe-senior-cistemnye-analitiki-qa-i-devops-moskva-do-200t");
+        System.out.println(post);
+    }
+
+    @Override
+    public String toString() {
+        return "Post{"
+                + "id=" + id
+                + ", title='" + title + '\''
+                + ", link='" + link + '\''
+                + ", description='" + description + '\''
+                + ", created=" + created
+                + '}';
     }
 }

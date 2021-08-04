@@ -9,9 +9,9 @@ public class SqlRuDateTimeParser implements DateTimeParser {
 
     @Override
     public LocalDateTime parse(String parse) {
-        String[] buffer = parse.replace(",","").split(" ");
+        String[] buffer = parse.replace(",", "").split(" ");
         String[] dateParts = new String[4];
-        if(buffer.length == 2) {
+        if (buffer.length == 2) {
             LocalDate date;
             if (buffer[0].equals("сегодня")) {
                 date = LocalDate.now();
@@ -20,8 +20,8 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             } else {
                 throw new IllegalArgumentException();
             }
-            dateParts[0] = String.valueOf(date.getDayOfYear());
-            dateParts[1] = String.valueOf(date.getMonthValue());
+            dateParts[0] = String.valueOf(date.getDayOfMonth());
+            dateParts[1] = String.format("%02d", date.getMonthValue());
             dateParts[2] = String.valueOf(date.getYear());
             dateParts[3] = buffer[1];
         } else {
@@ -62,9 +62,11 @@ public class SqlRuDateTimeParser implements DateTimeParser {
                 case "дек":
                     buffer[1] = "12";
                     break;
+                default:
+                    buffer[1] = "01";
             }
             int year = Integer.parseInt(buffer[2]);
-            if(year < 2000) {
+            if (year < 2000) {
                 buffer[2] = String.valueOf(year + 2000);
             }
             dateParts = Arrays.copyOf(buffer, 4);
