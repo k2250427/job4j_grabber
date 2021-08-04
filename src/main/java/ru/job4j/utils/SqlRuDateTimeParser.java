@@ -3,49 +3,86 @@ package ru.job4j.utils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
 
     @Override
     public LocalDateTime parse(String parse) {
-        String buffer = parse.replace(",","");
-        if (buffer.contains("сегодня")) {
-            buffer = buffer.replace("сегодня",
-                    LocalDate.now().format(DateTimeFormatter.ofPattern("d MM yyyy")));
-        } else if (buffer.contains("вчера")) {
-            buffer = buffer.replace("вчера",
-                    LocalDate.now().minusDays(1L).format(DateTimeFormatter.ofPattern("d MM yyyy")));
-        } else if (buffer.contains("янв")) {
-            buffer = buffer.replace("янв", "01");
-        } else if (buffer.contains("фев")) {
-            buffer = buffer.replace("фев", "02");
-        } else if (buffer.contains("мар")) {
-            buffer = buffer.replace("мар", "03");
-        } else if (buffer.contains("апр")) {
-            buffer = buffer.replace("апр", "04");
-        } else if (buffer.contains("май")) {
-            buffer = buffer.replace("май", "05");
-        } else if (buffer.contains("июн")) {
-            buffer = buffer.replace("июн", "06");
-        } else if (buffer.contains("июл")) {
-            buffer = buffer.replace("июл", "07");
-        } else if (buffer.contains("авг")) {
-            buffer = buffer.replace("авг", "08");
-        } else if (buffer.contains("сен")) {
-            buffer = buffer.replace("сен", "09");
-        } else if (buffer.contains("окт")) {
-            buffer = buffer.replace("окт", "10");
-        } else if (buffer.contains("ноя")) {
-            buffer = buffer.replace("ноя", "11");
-        } else if (buffer.contains("дек")) {
-            buffer = buffer.replace("дек", "12");
+        String[] buffer = parse.replace(",","").split(" ");
+        String[] dateParts = new String[4];
+        if(buffer.length == 2) {
+            LocalDate date;
+            if (buffer[0].equals("сегодня")) {
+                date = LocalDate.now();
+            } else if (buffer[0].equals("вчера")) {
+                date = LocalDate.now().minusDays(1L);
+            } else {
+                throw new IllegalArgumentException();
+            }
+            dateParts[0] = String.valueOf(date.getDayOfYear());
+            dateParts[1] = String.valueOf(date.getMonthValue());
+            dateParts[2] = String.valueOf(date.getYear());
+            dateParts[3] = buffer[1];
+        } else {
+            switch (buffer[1]) {
+                case "янв":
+                    buffer[1] = "01";
+                    break;
+                case "фев":
+                    buffer[1] = "02";
+                    break;
+                case "мар":
+                    buffer[1] = "03";
+                    break;
+                case "апр":
+                    buffer[1] = "04";
+                    break;
+                case "май":
+                    buffer[1] = "05";
+                    break;
+                case "июн":
+                    buffer[1] = "06";
+                    break;
+                case "июл":
+                    buffer[1] = "07";
+                    break;
+                case "авг":
+                    buffer[1] = "08";
+                    break;
+                case "сен":
+                    buffer[1] = "09";
+                    break;
+                case "окт":
+                    buffer[1] = "10";
+                    break;
+                case "ноя":
+                    buffer[1] = "11";
+                    break;
+                case "дек":
+                    buffer[1] = "12";
+                    break;
+            }
+            int year = Integer.parseInt(buffer[2]);
+            if(year < 2000) {
+                buffer[2] = String.valueOf(year + 2000);
+            }
+            dateParts = Arrays.copyOf(buffer, 4);
         }
-        return LocalDateTime.parse(buffer,
+        String sb = "";
+        sb = sb.concat(dateParts[0]);
+        sb = sb.concat(" ");
+        sb = sb.concat(dateParts[1]);
+        sb = sb.concat(" ");
+        sb = sb.concat(dateParts[2]);
+        sb = sb.concat(" ");
+        sb = sb.concat(dateParts[3]);
+        return LocalDateTime.parse(sb,
                 DateTimeFormatter.ofPattern("d MM yyyy HH:mm"));
     }
 
     public static void main(String[] args) {
         SqlRuDateTimeParser dtp = new SqlRuDateTimeParser();
-        LocalDateTime dt = dtp.parse("вчера, 10:51");
+        LocalDateTime dt = dtp.parse("13 дек 21, 10:51");
     }
 }
