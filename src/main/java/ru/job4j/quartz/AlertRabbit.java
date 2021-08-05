@@ -5,8 +5,6 @@ import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.InputStream;
 import java.sql.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
