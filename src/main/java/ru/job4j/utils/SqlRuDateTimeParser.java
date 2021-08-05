@@ -4,8 +4,27 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
+
+    private static final Map<String,String> monthToNumber = new HashMap<>();
+
+    public SqlRuDateTimeParser() {
+        monthToNumber.put("янв","01");
+        monthToNumber.put("фев","02");
+        monthToNumber.put("мар","03");
+        monthToNumber.put("апр","04");
+        monthToNumber.put("май","05");
+        monthToNumber.put("июн","06");
+        monthToNumber.put("июл","07");
+        monthToNumber.put("авг","08");
+        monthToNumber.put("сен","09");
+        monthToNumber.put("окт","10");
+        monthToNumber.put("ноя","11");
+        monthToNumber.put("дек","12");
+    }
 
     @Override
     public LocalDateTime parse(String parse) {
@@ -25,60 +44,14 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             dateParts[2] = String.valueOf(date.getYear());
             dateParts[3] = buffer[1];
         } else {
-            switch (buffer[1]) {
-                case "янв":
-                    buffer[1] = "01";
-                    break;
-                case "фев":
-                    buffer[1] = "02";
-                    break;
-                case "мар":
-                    buffer[1] = "03";
-                    break;
-                case "апр":
-                    buffer[1] = "04";
-                    break;
-                case "май":
-                    buffer[1] = "05";
-                    break;
-                case "июн":
-                    buffer[1] = "06";
-                    break;
-                case "июл":
-                    buffer[1] = "07";
-                    break;
-                case "авг":
-                    buffer[1] = "08";
-                    break;
-                case "сен":
-                    buffer[1] = "09";
-                    break;
-                case "окт":
-                    buffer[1] = "10";
-                    break;
-                case "ноя":
-                    buffer[1] = "11";
-                    break;
-                case "дек":
-                    buffer[1] = "12";
-                    break;
-                default:
-                    buffer[1] = "01";
-            }
+            buffer[1] = monthToNumber.get(buffer[1]);
             int year = Integer.parseInt(buffer[2]);
             if (year < 2000) {
                 buffer[2] = String.valueOf(year + 2000);
             }
             dateParts = Arrays.copyOf(buffer, 4);
         }
-        String sb = "";
-        sb = sb.concat(dateParts[0]);
-        sb = sb.concat(" ");
-        sb = sb.concat(dateParts[1]);
-        sb = sb.concat(" ");
-        sb = sb.concat(dateParts[2]);
-        sb = sb.concat(" ");
-        sb = sb.concat(dateParts[3]);
+        String sb = String.join(" ", dateParts[0], dateParts[1], dateParts[2], dateParts[3]);
         return LocalDateTime.parse(sb,
                 DateTimeFormatter.ofPattern("d MM yyyy HH:mm"));
     }
