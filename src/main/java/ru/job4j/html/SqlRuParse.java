@@ -27,10 +27,8 @@ public class SqlRuParse implements Parse {
             Document doc = Jsoup.connect(link).get();
             Elements row = doc.select(".postslisttopic");
             for (Element td : row) {
-                Post post = new Post();
                 Element href = td.child(0);
-                post.loadFromLink(href.attr("href"));
-                list.add(post);
+                list.add(detail(href.attr("href")));
            }
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,7 +39,15 @@ public class SqlRuParse implements Parse {
     public Post detail(String link) {
         Post post = new Post();
         try {
-            post.loadFromLink(link);
+            post.setLink(link);
+            Document doc = Jsoup.connect(link).get();
+            post.setTitle(doc.select("title").text());
+            post.setDescription(doc.select(".msgBody").get(1).text());
+            SqlRuDateTimeParser dataParser = new SqlRuDateTimeParser();
+            Elements footer = doc.select(".msgFooter");
+            String dateStr = footer.get(0).text();
+            int pos = dateStr.indexOf('[');
+            post.setCreated(dataParser.parse(dateStr.substring(0, pos - 1)));
         } catch (Exception e) {
             e.printStackTrace();
         }
