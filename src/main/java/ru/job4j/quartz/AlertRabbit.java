@@ -4,8 +4,9 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -76,6 +77,13 @@ public class AlertRabbit {
             List<Long> store = (List<Long>) context.getJobDetail().getJobDataMap().get("store");
             Connection cnt = (Connection) context.getJobDetail().getJobDataMap().get("connection");
             store.add(System.currentTimeMillis());
+            try (PreparedStatement statement =
+                         cnt.prepareStatement("insert into rabbit(created_date) values (?)")) {
+                statement.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+                statement.execute();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

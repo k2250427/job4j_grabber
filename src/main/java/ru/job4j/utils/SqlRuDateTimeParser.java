@@ -9,21 +9,22 @@ import java.util.Map;
 
 public class SqlRuDateTimeParser implements DateTimeParser {
 
-    private static final Map<String,String> monthToNumber = new HashMap<>();
+    @SuppressWarnings("checkstyle:ConstantName")
+    private static final Map<String, String> MONTHTONUMBER = new HashMap<>();
 
     public SqlRuDateTimeParser() {
-        monthToNumber.put("янв","01");
-        monthToNumber.put("фев","02");
-        monthToNumber.put("мар","03");
-        monthToNumber.put("апр","04");
-        monthToNumber.put("май","05");
-        monthToNumber.put("июн","06");
-        monthToNumber.put("июл","07");
-        monthToNumber.put("авг","08");
-        monthToNumber.put("сен","09");
-        monthToNumber.put("окт","10");
-        monthToNumber.put("ноя","11");
-        monthToNumber.put("дек","12");
+        MONTHTONUMBER.put("янв", "01");
+        MONTHTONUMBER.put("фев", "02");
+        MONTHTONUMBER.put("мар", "03");
+        MONTHTONUMBER.put("апр", "04");
+        MONTHTONUMBER.put("май", "05");
+        MONTHTONUMBER.put("июн", "06");
+        MONTHTONUMBER.put("июл", "07");
+        MONTHTONUMBER.put("авг", "08");
+        MONTHTONUMBER.put("сен", "09");
+        MONTHTONUMBER.put("окт", "10");
+        MONTHTONUMBER.put("ноя", "11");
+        MONTHTONUMBER.put("дек", "12");
     }
 
     @Override
@@ -44,7 +45,7 @@ public class SqlRuDateTimeParser implements DateTimeParser {
             dateParts[2] = String.valueOf(date.getYear());
             dateParts[3] = buffer[1];
         } else {
-            buffer[1] = monthToNumber.get(buffer[1]);
+            buffer[1] = MONTHTONUMBER.get(buffer[1]);
             int year = Integer.parseInt(buffer[2]);
             if (year < 2000) {
                 buffer[2] = String.valueOf(year + 2000);
