@@ -7,26 +7,26 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static java.util.Map.entry;
+
 public class SqlRuDateTimeParser implements DateTimeParser {
 
     @SuppressWarnings("checkstyle:ConstantName")
-    private static final Map<String, String> MONTHTONUMBER = new HashMap<>();
-
-    public SqlRuDateTimeParser() {
-        MONTHTONUMBER.put("янв", "01");
-        MONTHTONUMBER.put("фев", "02");
-        MONTHTONUMBER.put("мар", "03");
-        MONTHTONUMBER.put("апр", "04");
-        MONTHTONUMBER.put("май", "05");
-        MONTHTONUMBER.put("июн", "06");
-        MONTHTONUMBER.put("июл", "07");
-        MONTHTONUMBER.put("авг", "08");
-        MONTHTONUMBER.put("сен", "09");
-        MONTHTONUMBER.put("окт", "10");
-        MONTHTONUMBER.put("ноя", "11");
-        MONTHTONUMBER.put("дек", "12");
-    }
-
+    private static final Map<String, String> MONTHTONUMBER = Map.ofEntries(
+            entry("янв", "01"),
+            entry("фев", "02"),
+            entry("мар", "03"),
+            entry("апр", "04"),
+            entry("май", "05"),
+            entry("июн", "06"),
+            entry("июл", "07"),
+            entry("авг", "08"),
+            entry("сен", "09"),
+            entry("окт", "10"),
+            entry("ноя", "11"),
+            entry("дек", "12")
+    );
+    
     @Override
     public LocalDateTime parse(String parse) {
         String[] buffer = parse.replace(",", "").split(" ");
